@@ -1,48 +1,65 @@
+from tkinter import *
+from tkinter import ttk
 import requests
-import tkinter as tk
-from tkinter import messagebox
+def data_get():
+    city = city_name.get()
+    data= requests.get("https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=449eb6e56f1a6b122021f3d306e27481").json()
+    w_label1.config(text=data['weather'][0]['main']) 
+    wb_label1 .config(text=data['weather'][0]['description'])
+    temperature1.config(text=str(data['main']['temp']-273.15))
+    per_label1.config(text=data ['main'] ['pressure'])
+win = Tk()
+win.title("Weather Forecast")
+win.config(bg= "Light Blue")
+win.geometry("600x700")
 
-class WeatherForecastApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Weather Forecast App")
-        self.root.geometry("400x500")
+name_label = Label(win,text="Weather Forecast App",
+                  font=("Italics",30,"bold"))
+name_label.place(x=25,y=50,height=50,width=450)
+list_name=["Andhra Pradesh","Arunachal Pradesh ","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Andaman and Nicobar Islands","Chandigarh","Dadra and Nagar Haveli","Daman and Diu","Lakshadweep","National Capital Territory of Delhi","Puducherry"]
 
-        self.label = tk.Label(root, text="Enter City:")
-        self.label.pack()
+city_name= StringVar()
+com = ttk.Combobox(win,text="Weather Forecast App",values = list_name,
+                  font=("Italics",30,"bold"),textvariable=city_name)
+com.place(x=25,y=120,height=50,width=450)
 
-        self.city_entry = tk.Entry(root)
-        self.city_entry.pack()
+w_label = Label(win,text="Weather Climate",
+               font=("Time New Roman",17))
+w_label.place(x=25,y=260,height=50,width=210)
 
-        self.get_weather_button = tk.Button(root, text="Get Weather", command=self.get_weather)
-        self.get_weather_button.pack()
+w_label1 = Label(win,text="",
+               font=("Time New Roman",20))
+w_label1.place(x=250,y=260,height=50,width=210)
 
-    def get_weather(self):
-        city = self.city_entry.get()
+wb_label = Label(win,text="Weather Discription",
+               font=("Time New Roman",17))
+wb_label.place(x=25,y=330,height=50,width=210)
+wb_label1 = Label(win,text="",
+               font=("Time New Roman",17))
+wb_label1.place(x=250,y=330,height=50,width=210)
 
-        if not city:
-            messagebox.showerror("Error", "Please enter a city name.")
-            return
 
-        api_key = "YOUR_API_KEY"  # Replace with your OpenWeatherMap API key
-        base_url = "http://api.openweathermap.org/data/2.5/weather"
-        params = {
-            "q": city,
-            "appid": api_key,
-            "units": "metric"
-        }
+temperature = Label(win,text="Temperature",
+               font=("Time New Roman",17))
+temperature.place(x=25,y=400,height=50,width=210)
+temperature1 = Label(win,text="",
+               font=("Time New Roman",17))
+temperature1.place(x=250,y=400,height=50,width=210)
 
-        response = requests.get(base_url, params=params)
-        data = response.json()
 
-        if response.status_code == 200:
-            temperature = data["main"]["temp"]
-            description = data["weather"][0]["description"]
-            messagebox.showinfo("Weather Forecast", f"Weather in {city}:\nTemperature: {temperature}°C\nDescription: {description}")
-        else:
-            messagebox.showerror("Error", "Failed to fetch weather data.")
+per_label = Label(win,text="Pressure",
+               font=("Time New Roman",17))
+per_label.place(x=25,y=470,height=50,width=210)
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = WeatherForecastApp(root)
-    root.mainloop()
+per_label1 = Label(win,text="",
+               font=("Time New Roman",17))
+per_label1.place(x=250,y=470,height=50,width=210)
+
+done_button = Button(win, text="Done",
+                    font=("Time New Roman",20,"bold"), command = data_get)
+done_button.place(y=190,height=50,width=100,x=200)
+
+
+win.mainloop()
+
+    
